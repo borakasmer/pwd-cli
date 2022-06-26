@@ -20,17 +20,17 @@ var rootCmd = &cobra.Command{
 	Short: "You can generate a password with string and number length parameters and isCaption parameter.",
 	Long: `
 You can generate specific password with parameters like
-"pwd -s 7 -n 3 -c"
-"pwd"
-"pwd -n 10"
-"pwd -s 10"
+"pwd-cli -s 7 -n 3 -c"
+"pwd-cli"
+"pwd-cli -n 10"
+"pwd-cli -s 10"
 *** Password Length = s(string) + n(number) total length ***
 ------------------
 Example:
 "-s 7" Length of string characters of the new password parameter.
 "-n 3" => Length of number characters of the new password parameter.
 "-c" => Has password capital letters parameter.
-"pwd" command => Default "pwd --string 8 --iscapital 0"`,
+"pwd-cli" command => Default "pwd-cli --string 8 --iscapital 0"`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
@@ -81,7 +81,7 @@ type PasswordParams struct {
 }
 
 func generatePassword(params PasswordParams) {
-	fmt.Println(params)
+	//fmt.Println(params)
 	if params.strLength == 0 && params.numLength == 0 {
 		params.strLength = 8
 	}
