@@ -29,7 +29,7 @@ With this CLI Tool, you can generate your own password with specific parameters.
 <i>-c flag gets "true", if there is "-C" flag. If there is no -c flag, -c flag gets "false" value.<br> 
 -s flag gets default 8 value.</i><br> <br>
 
-<b><u>How to install Password Cli:</u></b><br>
+<b><u>How to install pwd-cli (Random Password Generator):</u></b><br>
 
 <table><tr><td><img src="https://user-images.githubusercontent.com/9459881/165053981-38543faf-4bae-4500-8c28-fd5f497e0f46.gif"></img></td>
   <td><i>go install github.com/borakasmer/pwd-cli@latest</i></td></tr></table>
