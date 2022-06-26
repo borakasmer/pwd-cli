@@ -2,6 +2,30 @@
 With this CLI Tool, you can generate your own password with specific parameters. You can get custom password with "-s 7, -n 3, -c" flags.<br><br>
 &#x1F34E;<I>This is Custom Password CLI. In every request, generated a new random password. If you don't set any parameters, you will get 8 length lowercase string password.</I>
 
+![NetflixGithub](https://raw.githubusercontent.com/borakasmer/pwd-cli/9f9277d27bda9e90da372c5035bde557ab0fa2d6/pwd-cli.gif)<br>
+
+<b>Flags:</b>
+<table><tr><td>:tv:</td><td><I>pwd-cli</I></td></tr><tr><td></td><td><I>pwd-cli -s 8 -n 3 -c</T></td></tr></table>
+<ul>
+  <li> -s, --str int        Length of string characters in Password</li>
+  <li> -n, --num int        Length of number characters in Password</li>
+  <li> -h, --help           Help for netflix-cli</li>
+  <li> -c, --capital bool   Is there any capital letter ?</li>
+</ul>
+
+<b>Default Command:</b> "pwd-cli" </br></br>
+<b>Example Usage:</b>
+
+<b>Usage:</b>
+  pwd-cli [flags]
+<ul>
+  <li>"pwd-cli -s 8 -n 3 -c"</li>
+  <li>"pwd-cli -s 10 -c"</li>
+  <li>"pwd-cli --str 6 --num 2 --capital"</li>
+  <li>"pwd-cli" => default: 'pwd-cli -s 8 -n 0'</li>
+</ul>
+**********************************************************************************************************</br>
+
 <i>-c flag gets "true", if there is "-C" flag. If there is no -c flag, -c flag gets "false" value.<br> 
 -s flag gets default 8 value.</i><br> <br>
 
