@@ -44,7 +44,7 @@ With this CLI Tool, you can generate your own password with specific parameters.
 <b>:green_book: Extra Detail</b><br>
 --------------------------------------------------------------------------------------------------------------
 <ul>
-  <li> "-s 10" The String length of Password is 10 and none of them is Capital. The default value is 8.</li>
-  <li> "-n 7" => The Number length of Password</li>
-  <li> "-s 5 -c" => The String Length of Password is 8 and some of them are Capital!</li>
+  <li> "-s 10" The Length of String Characters in Password is 10 and none of them is Capital. The default value is 8.</li>
+  <li> "-n 7" => The Length of Number Characters in Password is 7</li>
+  <li> "-s 5 -c" => The String Length of Password is 5 and some of them are Capital!</li>
   <li> "pwd-cli" command => By default it means "pwd-cli --str 8 --num 0". And there is no Capital letter in the Password.</li>
