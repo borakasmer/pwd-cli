@@ -6,12 +6,12 @@ package cmd
 
 import (
 	"fmt"
-	"math/rand"
+	"math/big"
+	//"math/rand"
+	"crypto/rand"
+	"github.com/spf13/cobra"
 	"os"
 	"strconv"
-	"time"
-
-	"github.com/spf13/cobra"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -80,6 +80,7 @@ type PasswordParams struct {
 	isCapital bool
 }
 
+/*
 func generatePassword(params PasswordParams) {
 	//fmt.Println(params)
 	if params.strLength == 0 && params.numLength == 0 {
@@ -113,15 +114,55 @@ func generatePassword(params PasswordParams) {
 		fmt.Println(password)
 	}
 }
+*/
 
-func getRandomNumber(length int) int {
+func generatePassword(params PasswordParams) {
+	if params.strLength == 0 && params.numLength == 0 {
+		params.strLength = 8
+	}
+	if params.numLength == 0 {
+		fmt.Println(getRandomString(params.strLength, params.isCapital))
+	} else if params.numLength > 0 {
+		password := ""
+		numberList := make(map[int]string)
+		passwordLength := params.numLength + params.strLength
+		for i := 0; i < params.numLength; i++ {
+			for {
+				index := getRandomNumber(int64(passwordLength))
+				if _, ok := numberList[int(index)]; ok {
+
+				} else {
+					numberList[int(index)] = strconv.Itoa(int(getRandomNumber(int64(10))))
+					break
+				}
+			}
+		}
+
+		for i2 := 0; i2 < passwordLength; i2++ {
+			if _, ok := numberList[i2]; ok {
+				password += numberList[i2]
+			} else {
+				password += getRandomString(1, params.isCapital)
+			}
+		}
+		fmt.Println(password)
+	}
+}
+
+/*func getRandomNumber(length int) int {
 	rand.Seed(time.Now().UnixNano())
 	return rand.Intn(length)
+}*/
+
+func getRandomNumber(length int64) int64 {
+	result, _ := rand.Int(rand.Reader, big.NewInt(length))
+	return result.Int64()
 }
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyz")
 var letterRunes2 = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
+/*
 func getRandomString(length int, isCapital bool) string {
 	rand.Seed(time.Now().UnixNano())
 	b := make([]rune, length)
@@ -130,6 +171,21 @@ func getRandomString(length int, isCapital bool) string {
 			b[i] = letterRunes2[rand.Intn(len(letterRunes2))]
 		} else {
 			b[i] = letterRunes[rand.Intn(len(letterRunes))]
+		}
+	}
+	return string(b)
+}
+*/
+
+func getRandomString(length int, isCapital bool) string {
+	b := make([]rune, length)
+	for i := range b {
+		if isCapital {
+			result, _ := rand.Int(rand.Reader, big.NewInt(int64(len(letterRunes2))))
+			b[i] = letterRunes2[result.Int64()]
+		} else {
+			result, _ := rand.Int(rand.Reader, big.NewInt(int64(len(letterRunes))))
+			b[i] = letterRunes[result.Int64()]
 		}
 	}
 	return string(b)
