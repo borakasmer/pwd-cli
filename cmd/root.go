@@ -7,6 +7,8 @@ package cmd
 import (
 	"fmt"
 	"math/big"
+	"unicode"
+
 	//"math/rand"
 	"crypto/rand"
 	"github.com/spf13/cobra"
@@ -121,14 +123,29 @@ func generatePassword(params PasswordParams) {
 		params.strLength = 8
 	}
 	if params.numLength == 0 {
-		fmt.Println(getRandomString(params.strLength, params.isCapital))
+		var password = getRandomString(params.strLength, params.isCapital)
+		if params.isCapital {
+			//If isCapital flag true, we will check is there any capital letter in password.
+			//If not set again until has a capital letter!
+			for {
+				if checkHasCapital(password) {
+					break
+				} else {
+					password = getRandomString(params.strLength, params.isCapital)
+				}
+			}
+		}
+		fmt.Println(password)
 	} else if params.numLength > 0 {
 		password := ""
 		numberList := make(map[int]string)
 		passwordLength := params.numLength + params.strLength
+
+		//Set Number Characters of the Password
 		for i := 0; i < params.numLength; i++ {
 			for {
 				index := getRandomNumber(int64(passwordLength))
+				//If you not get same RandomIndex for number character you will set RandomNumber for RandomIndex
 				if _, ok := numberList[int(index)]; ok {
 
 				} else {
@@ -138,11 +155,21 @@ func generatePassword(params PasswordParams) {
 			}
 		}
 
-		for i2 := 0; i2 < passwordLength; i2++ {
-			if _, ok := numberList[i2]; ok {
-				password += numberList[i2]
+		//Set String Characters of the Password
+		for {
+			for i2 := 0; i2 < passwordLength; i2++ {
+				if _, ok := numberList[i2]; ok {
+					password += numberList[i2]
+				} else {
+					password += getRandomString(1, params.isCapital)
+				}
+			}
+			//If isCapital flag false or there is at least one capital letter in password, we will break the loop
+			//If not set String Characters again until has a capital letter!
+			if !params.isCapital || checkHasCapital(password) {
+				break
 			} else {
-				password += getRandomString(1, params.isCapital)
+				password = ""
 			}
 		}
 		fmt.Println(password)
@@ -189,4 +216,13 @@ func getRandomString(length int, isCapital bool) string {
 		}
 	}
 	return string(b)
+}
+
+func checkHasCapital(password string) bool {
+	for i := 0; i < len(password); i++ {
+		if unicode.IsUpper(rune(password[i])) {
+			return true
+		}
+	}
+	return false
 }
