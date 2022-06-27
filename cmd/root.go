@@ -19,12 +19,13 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "pwd-cli",
-	Short: "You can generate a password with string and number length parameters and isCaption parameter.",
+	Short: "You can generate a password with string and number length parameters, isCaption parameter and finally has symbol parameter.",
 	Long: `
 You can generate specific password with parameters like
 "pwd-cli -s 7 -n 3 -c"
+"pwd-cli -s9 -n2 -x"
 "pwd-cli"
-"pwd-cli -n 10"
+"pwd-cli -n 10 -x"
 "pwd-cli -s 10"
 *** Password Length = s(string) + n(number) total length ***
 ------------------
@@ -32,11 +33,16 @@ Example:
 "-s 7" Length of string characters of the new password parameter.
 "-n 3" => Length of number characters of the new password parameter.
 "-c" => Has password capital letters parameter.
-"pwd-cli" command => Default "pwd-cli --string 8 --iscapital 0"`,
+"-x" => Has password symbol letters parameter.
+"pwd-cli" command => Default "pwd-cli --string 8 --number 0 --capital 0 --symbol 0"`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		isCapital, err := cmd.Flags().GetBool("capital")
+		if err != nil {
+			fmt.Println("Error: " + err.Error())
+		}
+		isSymbol, err := cmd.Flags().GetBool("symbol")
 		if err != nil {
 			fmt.Println("Error: " + err.Error())
 		}
@@ -48,7 +54,7 @@ Example:
 		if err != nil {
 			fmt.Println("Error: " + err.Error())
 		}
-		generatePassword(PasswordParams{isCapital: isCapital, strLength: str, numLength: num})
+		generatePassword(PasswordParams{isCapital: isCapital, strLength: str, numLength: num, isSymbol: isSymbol})
 	},
 }
 
@@ -73,6 +79,7 @@ func init() {
 	rootCmd.Flags().IntP("str", "s", 8, "Length of string")
 	rootCmd.Flags().IntP("num", "n", 0, "Length of number")
 	rootCmd.Flags().BoolP("capital", "c", false, "Is there any capital letter ?")
+	rootCmd.Flags().BoolP("symbol", "x", false, "Is there any symbol ?")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
@@ -80,6 +87,7 @@ type PasswordParams struct {
 	strLength int
 	numLength int
 	isCapital bool
+	isSymbol  bool
 }
 
 /*
@@ -119,11 +127,66 @@ func generatePassword(params PasswordParams) {
 */
 
 func generatePassword(params PasswordParams) {
+	symbolList := make(map[int]string)
+	password := ""
+
 	if params.strLength == 0 && params.numLength == 0 {
 		params.strLength = 8
 	}
+	passwordLength := params.numLength + params.strLength
+
+	//Set Symbol Characters of the Password if IsSymbol==true
+	if params.isSymbol {
+		passwordLength += params.strLength/3 + 1
+		for i := 0; i < params.strLength/3+1; i++ {
+			for {
+				index := getRandomNumber(int64(passwordLength))
+				//If you not get same RandomIndex for symbol character you will set RandomNumber for RandomIndex
+				if _, ok := symbolList[int(index)]; ok {
+
+				} else {
+					symbolList[int(index)] = getRandomSymbol()
+					break
+				}
+			}
+		}
+	}
+	//Set Symbols Index Finish----------
+
 	if params.numLength == 0 {
-		var password = getRandomString(params.strLength, params.isCapital)
+		//Set String Characters of the Password
+		if params.isSymbol {
+			for {
+				for i2 := 0; i2 < passwordLength; i2++ {
+					if _, ok := symbolList[i2]; ok {
+						password += symbolList[i2]
+					} else {
+						password += getRandomString(1, params.isCapital)
+					}
+				}
+				//If isCapital flag false or there is at least one capital letter in password, we will break the loop
+				//If not set String Characters again until has a capital letter!
+				if !params.isCapital || checkHasCapital(password) {
+					break
+				} else {
+					password = ""
+				}
+			}
+		} else {
+			password = getRandomString(params.strLength, params.isCapital)
+			if params.isCapital {
+				//If isCapital flag true, we will check is there any capital letter in password.
+				//If not set again until has a capital letter!
+				for {
+					if checkHasCapital(password) {
+						break
+					} else {
+						password = getRandomString(params.strLength, params.isCapital)
+					}
+				}
+			}
+		}
+		/*var password = getRandomString(params.strLength, params.isCapital)
 		if params.isCapital {
 			//If isCapital flag true, we will check is there any capital letter in password.
 			//If not set again until has a capital letter!
@@ -134,19 +197,24 @@ func generatePassword(params PasswordParams) {
 					password = getRandomString(params.strLength, params.isCapital)
 				}
 			}
-		}
+		}*/
 		fmt.Println(password)
 	} else if params.numLength > 0 {
 		password := ""
 		numberList := make(map[int]string)
 		passwordLength := params.numLength + params.strLength
 
+		if params.isSymbol {
+			passwordLength += params.strLength/3 + 1
+		}
 		//Set Number Characters of the Password
 		for i := 0; i < params.numLength; i++ {
 			for {
 				index := getRandomNumber(int64(passwordLength))
 				//If you not get same RandomIndex for number character you will set RandomNumber for RandomIndex
 				if _, ok := numberList[int(index)]; ok {
+
+				} else if _, ok := symbolList[int(index)]; ok { //If this is not in one of the symbolIndex
 
 				} else {
 					numberList[int(index)] = strconv.Itoa(int(getRandomNumber(int64(10))))
@@ -160,6 +228,8 @@ func generatePassword(params PasswordParams) {
 			for i2 := 0; i2 < passwordLength; i2++ {
 				if _, ok := numberList[i2]; ok {
 					password += numberList[i2]
+				} else if _, ok := symbolList[i2]; ok {
+					password += symbolList[i2]
 				} else {
 					password += getRandomString(1, params.isCapital)
 				}
@@ -188,6 +258,7 @@ func getRandomNumber(length int64) int64 {
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyz")
 var letterRunes2 = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var symbolRunes = []rune("~=+%^*/()[]{}/!@#$?|")
 
 /*
 func getRandomString(length int, isCapital bool) string {
@@ -203,6 +274,11 @@ func getRandomString(length int, isCapital bool) string {
 	return string(b)
 }
 */
+
+func getRandomSymbol() string {
+	result, _ := rand.Int(rand.Reader, big.NewInt(int64(len(symbolRunes))))
+	return string(symbolRunes[result.Int64()])
+}
 
 func getRandomString(length int, isCapital bool) string {
 	b := make([]rune, length)
