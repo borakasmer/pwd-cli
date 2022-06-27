@@ -13,6 +13,7 @@ With this CLI Tool, you can generate your own password with specific parameters.
   <li> -c, --capital bool   Is there any capital letter ?</li>
   <li> -x, --symbol bool    Is there any symbol letter ? It's Length is allways => "len(str)/3 + 1"</li>
 </ul>
+<img width="600" alt="xflag" src="https://github.com/borakasmer/pwd-cli/blob/main/Screen%20Shot%202022-06-28%20at%2000.50.08.png">
 
 <b>Default Command:</b> "pwd-cli" </br></br>
 <b>Example Usage:</b>
