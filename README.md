@@ -9,7 +9,7 @@ With this CLI Tool, you can generate your own password with specific parameters.
 <ul>
   <li> -s, --str int        Length of string characters in Password</li>
   <li> -n, --num int        Length of number characters in Password</li>
-  <li> -h, --help           Help for netflix-cli</li>
+  <li> -h, --help           Help for pwd-cli</li>
   <li> -c, --capital bool   Is there any capital letter ?</li>
 </ul>
 
