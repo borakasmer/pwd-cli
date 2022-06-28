@@ -11,7 +11,7 @@ With this CLI Tool, you can generate your own password with specific parameters.
   <li> -n, --num int        Length of number characters in Password</li>
   <li> -h, --help           Help for pwd-cli</li>
   <li> -c, --capital bool   Is there any capital letter ?</li>
-  <li> -x, --symbol bool    Is there any symbol letter ? It's Length is allways => "len(str)/3 + 1"</li>
+  <li> -x, --symbol bool    Is there any symbol letter ? Its length is always => "len(str)/3 + 1"</li>
 </ul>
 <img width="600" alt="xflag" src="https://github.com/borakasmer/pwd-cli/blob/main/Screen%20Shot%202022-06-28%20at%2000.50.08.png">
 
@@ -29,7 +29,7 @@ With this CLI Tool, you can generate your own password with specific parameters.
 **********************************************************************************************************</br>
 
 <i>-c flag gets "true", if there is "-c" flag. If there is no -c flag, -c flag gets "false" value.<br> 
--s flag gets default 8 value.<br> -x flag means put symbol in Password. Default symbol length formule is => "len(string)/3+1" </i><br> <br>
+-s flag gets default 8 value.<br> -x flag means put symbol in Password. Default symbol length formula is => "len(string)/3+1" </i><br> <br>
 
 <b><u>How to install pwd-cli (Random Password Generator):</u></b><br>
 
