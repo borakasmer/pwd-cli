@@ -23,8 +23,9 @@ With this CLI Tool, you can generate your own password with specific parameters.
 <ul>
   <li>"pwd-cli -s 8 -n 3 -c"</li>
   <li>"pwd-cli -s 10 -c -x"</li>
+  <li>"pwd-cli -n 6"</li>
   <li>"pwd-cli --str 6 --num 2 --capital --symbol"</li>
-  <li>"pwd-cli" => default: 'pwd-cli -s 8 -n 0 -x 0'</li>
+  <li>"pwd-cli" => default: 'pwd-cli -s 8 -n 0 -x 0 -c 0'</li>
 </ul>
 **********************************************************************************************************</br>
 
