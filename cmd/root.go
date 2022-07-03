@@ -76,7 +76,8 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().IntP("str", "s", 8, "Length of string")
+	//rootCmd.Flags().IntP("str", "s", 8, "Length of string") //03.07.2022 (If only set "-n6", password has only 6 digit numbers)
+	rootCmd.Flags().IntP("str", "s", 0, "Length of string")
 	rootCmd.Flags().IntP("num", "n", 0, "Length of number")
 	rootCmd.Flags().BoolP("capital", "c", false, "Is there any capital letter ?")
 	rootCmd.Flags().BoolP("symbol", "x", false, "Is there any symbol ?")
@@ -129,7 +130,7 @@ func generatePassword(params PasswordParams) {
 func generatePassword(params PasswordParams) {
 	symbolList := make(map[int]string)
 	password := ""
-
+	//If not number and string length not set.
 	if params.strLength == 0 && params.numLength == 0 {
 		params.strLength = 8
 	}
@@ -224,22 +225,33 @@ func generatePassword(params PasswordParams) {
 		}
 
 		//Set String Characters of the Password
-		for {
+		//03.07.2022
+		if params.strLength > 0 { // if setLength not set but numLength set => Password has only Number or NumberAndSymbol
+			for {
+				for i2 := 0; i2 < passwordLength; i2++ {
+					if _, ok := numberList[i2]; ok {
+						password += numberList[i2]
+					} else if _, ok := symbolList[i2]; ok {
+						password += symbolList[i2]
+					} else {
+						password += getRandomString(1, params.isCapital)
+					}
+				}
+				//If isCapital flag false or there is at least one capital letter in password, we will break the loop
+				//If not set String Characters again until has a capital letter!
+				if !params.isCapital || checkHasCapital(password) {
+					break
+				} else {
+					password = ""
+				}
+			}
+		} else { //Password has only Numbers and Symbols 03.07.2022
 			for i2 := 0; i2 < passwordLength; i2++ {
 				if _, ok := numberList[i2]; ok {
 					password += numberList[i2]
 				} else if _, ok := symbolList[i2]; ok {
 					password += symbolList[i2]
-				} else {
-					password += getRandomString(1, params.isCapital)
 				}
-			}
-			//If isCapital flag false or there is at least one capital letter in password, we will break the loop
-			//If not set String Characters again until has a capital letter!
-			if !params.isCapital || checkHasCapital(password) {
-				break
-			} else {
-				password = ""
 			}
 		}
 		fmt.Println(password)
