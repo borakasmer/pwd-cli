@@ -130,7 +130,7 @@ func generatePassword(params PasswordParams) {
 func generatePassword(params PasswordParams) {
 	symbolList := make(map[int]string)
 	password := ""
-	//If not number and string length not set.
+	//If number and string length not set.
 	if params.strLength == 0 && params.numLength == 0 {
 		params.strLength = 8
 	}
@@ -226,7 +226,7 @@ func generatePassword(params PasswordParams) {
 
 		//Set String Characters of the Password
 		//03.07.2022
-		if params.strLength > 0 { // if setLength not set but numLength set => Password has only Number or NumberAndSymbol
+		if params.strLength > 0 { //Classic Password => String + Number + Symbol
 			for {
 				for i2 := 0; i2 < passwordLength; i2++ {
 					if _, ok := numberList[i2]; ok {
@@ -246,6 +246,7 @@ func generatePassword(params PasswordParams) {
 				}
 			}
 		} else { //Password has only Numbers and Symbols 03.07.2022
+			//if setLength not set but numLength set => Password has only Number or NumberAndSymbol
 			for i2 := 0; i2 < passwordLength; i2++ {
 				if _, ok := numberList[i2]; ok {
 					password += numberList[i2]
